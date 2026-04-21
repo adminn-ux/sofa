@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>FurniHaven | Luxury Furniture Store</title>
+  <!-- Google Fonts + Font Awesome 6 (free) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #faf8f5;
+      color: #2c2a29;
+      line-height: 1.4;
+    }
+
+    /* header */
+    .header {
+      background: #ffffff;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #edeae5;
+    }
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #b87c4f, #8b5a2e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .logo span {
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: #8b7a6b;
+      display: block;
+      letter-spacing: 0;
+    }
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+      background: #f3efea;
+      padding: 0.7rem 1.2rem;
+      border-radius: 60px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+    .cart-icon i {
+      font-size: 1.5rem;
+      color: #5c3e2b;
+    }
+    .cart-icon span {
+      background: #b87c4f;
+      color: white;
+      border-radius: 40px;
+      padding: 0.1rem 0.6rem;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .cart-icon:hover {
+      background: #e6dfd7;
+    }
+
+    /* main container */
+    .container {
+      max-width: 1280px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    .hero {
+      background: #e9e2d9;
+      border-radius: 2rem;
+      padding: 2.5rem 2rem;
+      margin-bottom: 2.5rem;
+      text-align: center;
+    }
+    .hero h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #3b2a1f;
+    }
+    .hero p {
+      color: #5a4a3a;
+      max-width: 600px;
+      margin: 0.5rem auto 0;
+    }
+    .section-title {
+      font-size: 1.7rem;
+      font-weight: 600;
+      margin: 1.5rem 0 1rem;
+      border-left: 5px solid #b87c4f;
+      padding-left: 1rem;
+    }
+    /* product grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 2rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .product-card {
+      background: white;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      transition: all 0.25s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+      border: 1px solid #edeae5;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+      border-color: #e1d5ca;
+    }
+    .product-img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      background: #f5f0ea;
+    }
+    .product-info {
+      padding: 1.2rem;
+    }
+    .product-title {
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    .product-price {
+      color: #b87c4f;
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin: 0.5rem 0;
+    }
+    .add-to-cart {
+      background: #2c2a29;
+      border: none;
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 2rem;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .add-to-cart:hover {
+      background: #b87c4f;
+    }
+
+    /* MODAL (cart & payment) */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      backdrop-filter: blur(3px);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: white;
+      max-width: 550px;
+      width: 90%;
+      border-radius: 2rem;
+      padding: 1.5rem;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.2);
+      animation: fadeUp 0.2s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.8rem;
+      margin-bottom: 1.2rem;
+    }
+    .close-modal {
+      font-size: 1.8rem;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+    .cart-items-list {
+      max-height: 350px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    .cart-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #f0eae3;
+      align-items: center;
+    }
+    .cart-item-img {
+      width: 65px;
+      height: 65px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+    .cart-item-details {
+      flex: 1;
+    }
+    .cart-item-title {
+      font-weight: 600;
+    }
+    .cart-item-price {
+      font-size: 0.9rem;
+      color: #b87c4f;
+    }
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 5px;
+    }
+    .quantity-control button {
+      background: #f0ede9;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 30px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .remove-item {
+      background: none;
+      border: none;
+      color: #a5693c;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+    .cart-total {
+      text-align: right;
+      font-size: 1.4rem;
+      font-weight: 700;
+      border-top: 2px dashed #e2d9d0;
+      padding-top: 0.8rem;
+      margin: 0.5rem 0;
+    }
+    .checkout-btn, .pay-btn {
+      background: #b87c4f;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 0.9rem;
+      border-radius: 3rem;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 0.5rem;
+    }
+    .checkout-btn:hover, .pay-btn:hover {
+      background: #9b5e38;
+    }
+    /* payment form */
+    .payment-form .form-group {
+      margin-bottom: 1rem;
+    }
+    .payment-form label {
+      font-weight: 500;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+    .payment-form input {
+      width: 100%;
+      padding: 0.8rem;
+      border-radius: 1rem;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+    }
+    .card-row {
+      display: flex;
+      gap: 0.8rem;
+    }
+    .card-row .form-group {
+      flex: 1;
+    }
+    .error-msg {
+      color: #c7362b;
+      font-size: 0.8rem;
+      margin-top: 5px;
+    }
+    .success-badge {
+      background: #e6f4ea;
+      color: #2c6e3c;
+      padding: 0.8rem;
+      border-radius: 1rem;
+      text-align: center;
+    }
+    .empty-cart {
+      text-align: center;
+      color: #aa9f93;
+      padding: 2rem;
+    }
+    footer {
+      background: #eae3db;
+      text-align: center;
+      padding: 1.5rem;
+      margin-top: 3rem;
+      font-size: 0.8rem;
+    }
+    @media (max-width: 650px) {
+      .header {
+        padding: 1rem;
+      }
+      .container {
+        padding: 0 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <h1>FurniHaven <i class="fas fa-couch"></i></h1>
+    <span>Timeless elegance · Modern comfort</span>
+  </div>
+  <div class="cart-icon" id="cartIconBtn">
+    <i class="fas fa-shopping-bag"></i>
+    <span id="cartCount">0</span>
+    <span style="font-size:0.85rem;">Cart</span>
+  </div>
+</header>
+
+<main class="container">
+  <div class="hero">
+    <h2>Handcrafted furniture for every soul</h2>
+    <p>Premium quality, sustainable materials, and free shipping on orders over $150</p>
+  </div>
+  <div class="section-title">✨ Best Sellers</div>
+  <div class="products-grid" id="productsGrid"></div>
+</main>
+
+<footer>
+  <p>© 2025 FurniHaven — Elevate your living space. Secure online payments with simulated gateway.</p>
+</footer>
+
+<!-- CART MODAL -->
+<div id="cartModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><i class="fas fa-shopping-cart"></i> Your Cart</h3>
+      <button class="close-modal" id="closeCartModal">&times;</button>
+    </div>
+    <div id="cartItemsContainer" class="cart-items-list">
+      <!-- dynamic cart items -->
+    </div>
+    <div id="cartTotalDisplay" class="cart-total">Total: $0.00</div>
+    <button class="checkout-btn" id="proceedCheckoutBtn">Proceed to Checkout <i class="fas fa-arrow-right"></i></button>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL (online payment simulation) -->
+<div id="paymentModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3><i class="fas fa-credit-card"></i> Online Payment</h3>
+      <button class="close-modal" id="closePaymentModal">&times;</button>
+    </div>
+    <div id="paymentMessage"></div>
+    <form id="paymentForm" class="payment-form">
+      <div class="form-group">
+        <label>Cardholder Name</label>
+        <input type="text" id="cardName" placeholder="John Doe" required>
+      </div>
+      <div class="form-group">
+        <label>Card Number</label>
+        <input type="text" id="cardNumber" placeholder="4242 4242 4242 4242" maxlength="19">
+      </div>
+      <div class="card-row">
+        <div class="form-group">
+          <label>Expiry (MM/YY)</label>
+          <input type="text" id="cardExpiry" placeholder="12/28">
+        </div>
+        <div class="form-group">
+          <label>CVV</label>
+          <input type="text" id="cardCvv" placeholder="123" maxlength="4">
+        </div>
+      </div>
+      <div id="paymentError" class="error-msg" style="display:none;"></div>
+      <button type="submit" class="pay-btn" id="confirmPaymentBtn"><i class="fas fa-lock"></i> Pay Now</button>
+    </form>
+    <p style="font-size:0.7rem; margin-top: 12px; text-align:center; color:#8b7a6b;">🔐 Test mode: Use any card (4242 4242 4242 4242) for demo</p>
+  </div>
+</div>
+
+<script>
+  // ---------- PRODUCT DATA (furniture pics) ----------
+  const products = [
+    { id: 1, name: "Velvet Cloud Sofa", price: 899.99, image: "https://images.pexels.com/photos/276583/pexels-photo-276583.jpeg?auto=compress&cs=tinysrgb&w=600", category: "sofa" },
+    { id: 2, name: "Midcentury Walnut Table", price: 449.00, image: "https://images.pexels.com/photos/1256216/pexels-photo-1256216.jpeg?auto=compress&cs=tinysrgb&w=600", category: "table" },
+    { id: 3, name: "Ergonomic Mesh Chair", price: 279.50, image: "https://images.pexels.com/photos/116910/pexels-photo-116910.jpeg?auto=compress&cs=tinysrgb&w=600", category: "chair" },
+    { id: 4, name: "Boho Rattan Armchair", price: 359.00, image: "https://images.pexels.com/photos/4060149/pexels-photo-4060149.jpeg?auto=compress&cs=tinysrgb&w=600", category: "chair" },
+    { id: 5, name: "Modern King Bed Frame", price: 1299.00, image: "https://images.pexels.com/photos/373830/pexels-photo-373830.jpeg?auto=compress&cs=tinysrgb&w=600", category: "bed" },
+    { id: 6, name: "Rustic Bookshelf", price: 199.99, image: "https://images.pexels.com/photos/1482970/pexels-photo-1482970.jpeg?auto=compress&cs=tinysrgb&w=600", category: "storage" }
+  ];
+
+  // ---------- CART STATE (localStorage) ----------
+  let cart = [];
+
+  // Load cart from localStorage
+  function loadCart() {
+    const savedCart = localStorage.getItem("furni_cart");
+    if (savedCart) {
+      cart = JSON.parse(savedCart);
+    } else {
+      cart = [];
+    }
+    updateCartUI();
+  }
+
+  // Save cart to localStorage
+  function saveCart() {
+    localStorage.setItem("furni_cart", JSON.stringify(cart));
+    updateCartUI();
+  }
+
+  // Update cart badge + total in modal (when open)
+  function updateCartUI() {
+    const cartCountEl = document.getElementById("cartCount");
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    if (cartCountEl) cartCountEl.innerText = totalItems;
+
+    // if cart modal is visible, refresh its content
+    const cartModal = document.getElementById("cartModal");
+    if (cartModal && cartModal.style.display === "flex") {
+      renderCartItemsInModal();
+    }
+  }
+
+  // Add product to cart
+  function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+    const existingItem = cart.find(item => item.id === productId);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: 1
+      });
+    }
+    saveCart();
+    showTemporaryToast(`${product.name} added to cart!`);
+  }
+
+  // Helper toast (simple)
+  function showTemporaryToast(msg) {
+    let toast = document.createElement("div");
+    toast.innerText = msg;
+    toast.style.position = "fixed";
+    toast.style.bottom = "20px";
+    toast.style.left = "50%";
+    toast.style.transform = "translateX(-50%)";
+    toast.style.backgroundColor = "#2c2a29";
+    toast.style.color = "white";
+    toast.style.padding = "12px 24px";
+    toast.style.borderRadius = "40px";
+    toast.style.fontWeight = "500";
+    toast.style.zIndex = "2000";
+    toast.style.fontSize = "0.9rem";
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+  }
+
+  // Remove cart item
+  function removeCartItem(id) {
+    cart = cart.filter(item => item.id !== id);
+    saveCart();
+    if (document.getElementById("cartModal").style.display === "flex") renderCartItemsInModal();
+  }
+
+  // Update quantity
+  function updateQuantity(id, delta) {
+    const idx = cart.findIndex(item => item.id === id);
+    if (idx !== -1) {
+      const newQty = cart[idx].quantity + delta;
+      if (newQty <= 0) {
+        removeCartItem(id);
+      } else {
+        cart[idx].quantity = newQty;
+        saveCart();
+      }
+      if (document.getElementById("cartModal").style.display === "flex") renderCartItemsInModal();
+    }
+  }
+
+  // Render cart items inside modal
+  function renderCartItemsInModal() {
+    const container = document.getElementById("cartItemsContainer");
+    const totalSpan = document.getElementById("cartTotalDisplay");
+    if (!container) return;
+
+    if (cart.length === 0) {
+      container.innerHTML = `<div class="empty-cart"><i class="fas fa-box-open"></i> <br/> Your cart is empty. Add beautiful furniture!</div>`;
+      totalSpan.innerHTML = `Total: $0.00`;
+      return;
+    }
+
+    let total = 0;
+    let html = "";
+    cart.forEach(item => {
+      const itemTotal = item.price * item.quantity;
+      total += itemTotal;
+      html += `
+        <div class="cart-item">
+          <img class="cart-item-img" src="${item.image}" alt="${item.name}" loading="lazy">
+          <div class="cart-item-details">
+            <div class="cart-item-title">${item.name}</div>
+            <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+            <div class="quantity-control">
+              <button class="qty-decr" data-id="${item.id}">−</button>
+              <span>${item.quantity}</span>
+              <button class="qty-incr" data-id="${item.id}">+</button>
+              <button class="remove-item" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
+          <div style="font-weight:600;">$${itemTotal.toFixed(2)}</div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+    totalSpan.innerHTML = `Total: $${total.toFixed(2)}`;
+
+    // attach events for dynamically created buttons
+    document.querySelectorAll('.qty-decr').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = parseInt(btn.dataset.id);
+        updateQuantity(id, -1);
+      });
+    });
+    document.querySelectorAll('.qty-incr').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = parseInt(btn.dataset.id);
+        updateQuantity(id, 1);
+      });
+    });
+    document.querySelectorAll('.remove-item').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = parseInt(btn.dataset.id);
+        removeCartItem(id);
+      });
+    });
+  }
+
+  // show cart modal
+  function showCartModal() {
+    renderCartItemsInModal();
+    const modal = document.getElementById("cartModal");
+    modal.style.display = "flex";
+  }
+
+  // close cart modal
+  function closeCartModal() {
+    document.getElementById("cartModal").style.display = "none";
+  }
+
+  // show payment modal (online payment)
+  function showPaymentModal() {
+    if (cart.length === 0) {
+      showTemporaryToast("Your cart is empty. Add items first!");
+      return;
+    }
+    // reset payment form & errors
+    document.getElementById("paymentForm").reset();
+    const errorDiv = document.getElementById("paymentError");
+    errorDiv.style.display = "none";
+    errorDiv.innerText = "";
+    document.getElementById("paymentMessage").innerHTML = "";
+    const paymentModal = document.getElementById("paymentModal");
+    paymentModal.style.display = "flex";
+  }
+
+  function closePaymentModal() {
+    document.getElementById("paymentModal").style.display = "none";
+  }
+
+  // Process payment (simulated online payment)
+  function processPayment(event) {
+    event.preventDefault();
+    const cardName = document.getElementById("cardName").value.trim();
+    let cardNumber = document.getElementById("cardNumber").value.replace(/\s/g, '');
+    const cardExpiry = document.getElementById("cardExpiry").value.trim();
+    const cardCvv = document.getElementById("cardCvv").value.trim();
+    const errorDiv = document.getElementById("paymentError");
+
+    // basic validation
+    if (!cardName || !cardNumber || !cardExpiry || !cardCvv) {
+      errorDiv.innerText = "❌ Please fill in all payment fields.";
+      errorDiv.style.display = "block";
+      return;
+    }
+    if (cardNumber.length < 13 || cardNumber.length > 16) {
+      errorDiv.innerText = "❌ Invalid card number length (should be 13-16 digits). Use test 4242424242424242";
+      errorDiv.style.display = "block";
+      return;
+    }
+    if (!/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+      errorDiv.innerText = "❌ Expiry must be MM/YY format.";
+      errorDiv.style.display = "block";
+      return;
+    }
+    if (!/^\d{3,4}$/.test(cardCvv)) {
+      errorDiv.innerText = "❌ CVV must be 3 or 4 digits.";
+      errorDiv.style.display = "block";
+      return;
+    }
+
+    // simulate payment processing
+    errorDiv.style.display = "none";
+    const payBtn = document.getElementById("confirmPaymentBtn");
+    payBtn.disabled = true;
+    payBtn.innerHTML = "<i class='fas fa-spinner fa-pulse'></i> Processing...";
+
+    setTimeout(() => {
+      // success scenario (mock online payment)
+      const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0).toFixed(2);
+      // clear cart
+      cart = [];
+      saveCart();
+      // close modals
+      closePaymentModal();
+      closeCartModal();
+      // success message
+      const msgDiv = document.createElement("div");
+      msgDiv.className = "success-badge";
+      msgDiv.style.position = "fixed";
+      msgDiv.style.bottom = "30px";
+      msgDiv.style.left = "50%";
+      msgDiv.style.transform = "translateX(-50%)";
+      msgDiv.style.zIndex = "1200";
+      msgDiv.style.backgroundColor = "#e6f4ea";
+      msgDiv.style.padding = "14px 28px";
+      msgDiv.style.borderRadius = "40px";
+      msgDiv.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+      msgDiv.innerHTML = `<i class="fas fa-check-circle"></i> Payment successful! $${totalAmount} charged. Thank you for your order! 🛋️`;
+      document.body.appendChild(msgDiv);
+      setTimeout(() => msgDiv.remove(), 4000);
+      updateCartUI();
+      payBtn.disabled = false;
+      payBtn.innerHTML = "<i class='fas fa-lock'></i> Pay Now";
+      // if cart modal open after? already closed
+    }, 1200);
+  }
+
+  // Render product cards
+  function renderProducts() {
+    const grid = document.getElementById("productsGrid");
+    if (!grid) return;
+    grid.innerHTML = "";
+    products.forEach(product => {
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.innerHTML = `
+        <img class="product-img" src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.src='https://placehold.co/600x400?text=Furniture+Image'">
+        <div class="product-info">
+          <div class="product-title">${product.name}</div>
+          <div class="product-price">$${product.price.toFixed(2)}</div>
+          <button class="add-to-cart" data-id="${product.id}"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    document.querySelectorAll(".add-to-cart").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const id = parseInt(btn.dataset.id);
+        addToCart(id);
+      });
+    });
+  }
+
+  // ----- Event Listeners & Initialization -----
+  document.addEventListener("DOMContentLoaded", () => {
+    loadCart();
+    renderProducts();
+
+    // Cart modal controls
+    const cartIcon = document.getElementById("cartIconBtn");
+    const closeCart = document.getElementById("closeCartModal");
+    const proceedCheckout = document.getElementById("proceedCheckoutBtn");
+
+    cartIcon.addEventListener("click", showCartModal);
+    closeCart.addEventListener("click", closeCartModal);
+    if (proceedCheckout) {
+      proceedCheckout.addEventListener("click", () => {
+        if (cart.length === 0) {
+          showTemporaryToast("Your cart is empty. Add some furniture first.");
+          return;
+        }
+        closeCartModal();    // close cart modal
+        showPaymentModal();  // open payment modal (online payment)
+      });
+    }
+
+    // Payment modal close
+    const closePayment = document.getElementById("closePaymentModal");
+    if (closePayment) closePayment.addEventListener("click", closePaymentModal);
+    const paymentForm = document.getElementById("paymentForm");
+    if (paymentForm) paymentForm.addEventListener("submit", processPayment);
+
+    // click outside modals to close
+    window.addEventListener("click", (e) => {
+      const cartModal = document.getElementById("cartModal");
+      const paymentModal = document.getElementById("paymentModal");
+      if (e.target === cartModal) closeCartModal();
+      if (e.target === paymentModal) closePaymentModal();
+    });
+  });
+</script>
+</body>
+</html>
